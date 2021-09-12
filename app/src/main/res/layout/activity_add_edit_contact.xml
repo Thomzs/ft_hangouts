@@ -25,7 +25,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="48dp"
         android:layout_marginBottom="18dp"
-        android:background="#F1F1F1"
+        android:background="#D3D3D3"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginBottom="48dp"
-        android:background="#F1F1F1"
+        android:background="#D3D3D3"
         app:layout_constraintBottom_toTopOf="@+id/view4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -98,7 +98,7 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="48dp"
-        android:background="#F1F1F1"
+        android:background="#D3D3D3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3"
@@ -114,12 +114,14 @@
         android:layout_marginBottom="48dp"
         android:ems="10"
         android:hint="@string/phone"
+        android:importantForAutofill="no"
         android:inputType="phone"
         android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@+id/view6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view3"
+        tools:ignore="TextContrastCheck" />
 
     <view
         android:id="@+id/view6"
@@ -127,7 +129,7 @@
         android:layout_width="0dp"
         android:layout_height="192dp"
         android:layout_marginTop="48dp"
-        android:background="#F1F1F1"
+        android:background="#D3D3D3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view4"
@@ -146,6 +148,48 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintTop_toBottomOf="@+id/view4"
+        android:importantForAutofill="no" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="170dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="112dp"
+        android:backgroundTint="#D3D3D3"
+        android:text="@string/contact_delete"
+        android:textColor="#C84141"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view6"
+        tools:ignore="TextContrastCheck" />
+
+    <TextView
+        android:id="@+id/cancel_button"
+        android:layout_width="67dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textIsSelectable="false"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ok_button"
+        android:layout_width="51dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="22dp"
+        android:gravity="center"
+        android:text="@android:string/ok"
+        android:textIsSelectable="false"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

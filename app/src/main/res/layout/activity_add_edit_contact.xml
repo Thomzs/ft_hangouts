@@ -152,7 +152,7 @@
         android:importantForAutofill="no" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/button_delete"
         android:layout_width="170dp"
         android:layout_height="52dp"
         android:layout_marginStart="112dp"

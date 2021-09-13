@@ -1,6 +1,10 @@
 package edu.tmeyer.ft_hangouts.database;
 
-public class Contact {
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
+
+public class Contact implements Serializable {
 
     private int     id;
     private String  firstName;
@@ -74,5 +78,11 @@ public class Contact {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.firstName + " " + this.lastName;
     }
 }

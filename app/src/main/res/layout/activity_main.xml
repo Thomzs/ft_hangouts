@@ -24,6 +24,7 @@
         android:gravity="center"
         android:text="@string/language"
         android:textColor="#659DB3"
+        android:textSize="16sp"
         android:textStyle="normal|bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,6 +36,7 @@
         android:gravity="center"
         android:text="@string/add_contact"
         android:textColor="#659DB3"
+        android:textSize="16sp"
         android:textStyle="normal|bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,6 +47,7 @@
         android:layout_height="56dp"
         android:gravity="center"
         android:text="@string/app_name"
+        android:textSize="20sp"
         android:textStyle="normal|bold"
         app:layout_constraintEnd_toStartOf="@id/new_button"
         app:layout_constraintStart_toEndOf="@id/language_button"
@@ -52,8 +55,8 @@
 
     <ListView
         android:id="@+id/contact_list"
-        android:layout_width="wrap_content"
-        android:layout_height="673dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

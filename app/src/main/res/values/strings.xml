@@ -8,4 +8,6 @@
     <string name="cancel">Cancel</string>
     <string name="language">Language</string>
     <string name="add_contact">New</string>
+    <string name="delete_warning">You are about to delete this contact. This action is irreversible. Do you wish to continue?</string>
+    <string name="delete">Delete</string>
 </resources>

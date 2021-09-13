@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "SQLite";
 
     //Database info
-    private static final int    DATABASE_VERSION = 1;
+    private static final int    DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "FT_HANGOUTS";
     private static final String TABLE_NAME = "CONTACT";
 
@@ -98,7 +98,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<Contact> getAllContacts() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT id, first_name, last_name FROM " + TABLE_NAME;
+        String query = "SELECT id, " + COLUMN_CONTACT_FIRST_NAME + ", " + COLUMN_CONTACT_LAST_NAME + " FROM " + TABLE_NAME;
         Cursor cursor = db.rawQuery(query, null);
         List<Contact> contactList = new ArrayList<>();
 

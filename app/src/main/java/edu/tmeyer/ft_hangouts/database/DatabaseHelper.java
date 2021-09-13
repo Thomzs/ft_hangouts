@@ -98,7 +98,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<Contact> getAllContacts() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
+        String query = "SELECT id, first_name, last_name FROM " + TABLE_NAME;
         Cursor cursor = db.rawQuery(query, null);
         List<Contact> contactList = new ArrayList<>();
 
@@ -107,9 +107,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contact.setId(cursor.getInt(0));
             contact.setFirstName(cursor.getString(1));
             contact.setLastName(cursor.getString(2));
-            contact.setPhone(cursor.getString(3));
-            contact.setPicture(cursor.getBlob(4));
-            contact.setNote(cursor.getString(5));
             contactList.add(contact);
         }
         cursor.close();
@@ -164,5 +161,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return count;
+    }
+
+    public void test() {
+        Contact contact = new Contact("Jean", "Eude", "0102030405", "gentil", new byte[0]);
+        this.addContact(contact);
     }
 }

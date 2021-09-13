@@ -6,4 +6,6 @@
     <string name="note">Notes</string>
     <string name="contact_delete">Delete contact</string>
     <string name="cancel">Cancel</string>
+    <string name="language">Language</string>
+    <string name="add_contact">New</string>
 </resources>

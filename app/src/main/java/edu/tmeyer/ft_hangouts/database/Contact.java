@@ -18,6 +18,14 @@ public class Contact {
         this.picture = picture;
     }
 
+    public Contact(String firstName, String lastName, String phone, String note, byte[] picture) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.note = note;
+        this.picture = picture;
+    }
+
     public Contact() {}
 
     public int getId() {

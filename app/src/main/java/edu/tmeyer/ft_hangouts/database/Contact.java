@@ -83,6 +83,6 @@ public class Contact implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        return this.firstName + " " + this.lastName;
+        return this.firstName + " " + "<b>" + this.lastName + "</b>";
     }
 }

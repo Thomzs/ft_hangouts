@@ -91,21 +91,26 @@ public class AddEditContactActivity extends AppCompatActivity {
                                     DatabaseHelper databaseHelper = new DatabaseHelper(this);
                                     databaseHelper.deleteContact(contact);
                                     this.needRefresh = true;
-                                    onBackPressed();
+                                    Intent returnIntent = new Intent();
+                                    returnIntent.putExtra("needRefresh", this.needRefresh);
+                                    setResult(Activity.RESULT_OK, returnIntent);
+                                    finish();
                                 })
                         .show();
 
             });
         } else {
+            this.buttonOk.setClickable(false);
             this.mode = MainActivity.MODE_CREATE;
             this.buttonDelete.setVisibility(View.INVISIBLE);
         }
 
         this.buttonCancel.setOnClickListener(view -> {
-            this.onBackPressed(); //On cancel pressed, do nothing just get back to main view
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_CANCELED, returnIntent);
+            finish(); //On cancel pressed, do nothing just get back to main view
         });
 
-        this.buttonOk.setClickable(mode == MainActivity.MODE_EDIT);
         this.buttonOk.setOnClickListener(view -> {
             DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
@@ -126,8 +131,12 @@ public class AddEditContactActivity extends AppCompatActivity {
                 databaseHelper.updateContact(contact);
             }
             this.needRefresh = true;
-            onBackPressed();
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("needRefresh", this.needRefresh);
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
         });
+        this.buttonOk.setClickable(mode == MainActivity.MODE_EDIT);
 
     }
 
@@ -143,14 +152,5 @@ public class AddEditContactActivity extends AppCompatActivity {
         } else {
             this.buttonOk.setTextColor(Color.parseColor("#808080"));
         }
-    }
-
-    @Override
-    public void finish() {
-        Intent data = new Intent();
-
-        data.putExtra("needRefresh", this.needRefresh);
-        this.setResult(Activity.RESULT_OK, data);
-        super.finish();
     }
 }

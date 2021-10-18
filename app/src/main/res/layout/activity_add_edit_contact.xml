@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/contact_picture"
+        android:id="@+id/contact_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="141dp"
@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contact_picture"
+        app:layout_constraintTop_toBottomOf="@+id/contact_image"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <EditText
@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contact_picture"
+        app:layout_constraintTop_toBottomOf="@+id/contact_image"
         tools:ignore="TextContrastCheck" />
 
     <view

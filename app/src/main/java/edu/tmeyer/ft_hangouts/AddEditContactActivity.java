@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -30,6 +34,7 @@ public class AddEditContactActivity extends AppCompatActivity {
     private TextView    buttonCancel;
     private TextView    buttonOk;
     private TextView    buttonDelete;
+    private ImageView   imageContact;
 
     private Contact     contact;
     private boolean     needRefresh;
@@ -66,9 +71,12 @@ public class AddEditContactActivity extends AppCompatActivity {
         this.textPhone.addTextChangedListener(new GenericTextWatcher());
         this.textNote = (EditText) this.findViewById(R.id.contact_note);
         this.textNote.addTextChangedListener(new GenericTextWatcher());
+
         this.buttonCancel = (TextView) this.findViewById(R.id.cancel_button);
         this.buttonDelete = (TextView) this.findViewById(R.id.button_delete);
         this.buttonOk = (TextView) this.findViewById(R.id.ok_button);
+
+        this.imageContact = (ImageView) this.findViewById(R.id.contact_image);
 
 
         Intent intent = this.getIntent();
@@ -79,6 +87,14 @@ public class AddEditContactActivity extends AppCompatActivity {
             this.textLastName.setText(contact.getLastName());
             this.textPhone.setText(contact.getPhone());
             this.textNote.setText(contact.getNote());
+
+            byte[] picture = this.contact.getPicture();
+            if (picture == null || picture.length == 0) {
+                this.imageContact.setImageResource(R.drawable.default_contact);
+            } else {
+                Bitmap bmp = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+            }
+
 
             //Delete button is enabled only in edit mode, otherwise it is disabled
             this.buttonDelete.setOnClickListener(view -> {

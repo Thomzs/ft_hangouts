@@ -3,10 +3,15 @@ package edu.tmeyer.ft_hangouts;
 import androidx.activity.result.ActivityResult;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected final CustomActivityResult<Intent, ActivityResult>
                                     activityLauncher = CustomActivityResult.registerActivityForResult(this);
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("mode", MODE_EDIT);
             openContactActivityForResult(intent);
         });
+/*        this.listView.setOnTouchListener((view, motionEvent) -> { //Hide keyboard on touch on list
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            return false;
+        });*/
 
         TextView newButton = (TextView) findViewById(R.id.new_button);
         newButton.setOnClickListener(view -> {

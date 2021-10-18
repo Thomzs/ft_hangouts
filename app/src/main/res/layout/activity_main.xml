@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_constraintTop_toTopOf="@searchView"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -53,12 +54,42 @@
         app:layout_constraintStart_toEndOf="@id/language_button"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <view
+        android:id="@+id/view7"
+        class="androidx.appcompat.widget.SearchView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#D3D3D3"
+        app:layout_constraintBottom_toTopOf="@id/contact_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2" />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white"
+        android:queryHint="@string/search"
+        app:layout_constraintBottom_toTopOf="@+id/contact_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+
+    </SearchView>
+
     <ListView
         android:id="@+id/contact_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#EDE9E9"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

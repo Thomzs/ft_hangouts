@@ -13,6 +13,14 @@ public class Contact implements Serializable {
     private String  note;
     private byte[] picture;
 
+    public Contact(Contact contact) {
+        this.id = contact.getId();
+        this.firstName = contact.getFirstName();
+        this.lastName = contact.getLastName();
+        this.note = contact.getNote();
+        this.picture = contact.getPicture();
+    }
+
     public Contact(int id, String firstName, String lastName, String phone, String note, byte[] picture) {
         this.id = id;
         this.firstName = firstName;
@@ -84,5 +92,9 @@ public class Contact implements Serializable {
     @Override
     public String toString() {
         return this.firstName + " " + "<b>" + this.lastName + "</b>";
+    }
+
+    public String toPlainString() {
+        return this.firstName + " " + this.lastName;
     }
 }

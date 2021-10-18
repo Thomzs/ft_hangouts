@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int         MODE_CREATE = 1;
     public static final int         MODE_EDIT = 2;
-    public static final int         MODE_REQUEST = 3;
 
     private final ArrayList<Contact>     contactList = new ArrayList<>();
     private ArrayAdapter<Contact>   listViewAdapter;
@@ -67,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             openContactActivityForResult(intent);
         });
     }
-
 
     private void openContactActivityForResult(Intent intent) {
         activityLauncher.launch(intent, result -> {

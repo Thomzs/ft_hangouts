@@ -6,8 +6,9 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,14 +18,31 @@ import java.util.logging.Logger;
 
 import edu.tmeyer.ft_hangouts.database.Contact;
 
-public class ContactAdapter extends ArrayAdapter<Contact> {
+public class ContactAdapter extends BaseAdapter implements Filterable {
 
-    private ArrayList<Contact> contacts;
-    private ArrayList<Contact> filteredContacts;
+    private ArrayList<Contact> contacts = new ArrayList<>(0);
+    private ArrayList<Contact> filteredContacts = new ArrayList<>(0);
+    LayoutInflater inflater;
 
-    public ContactAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Contact> contacts) {
-        super(context, resource, contacts);
+    public ContactAdapter(@NonNull Context context, @NonNull ArrayList<Contact> contacts) {
         this.contacts = contacts;
+        this.filteredContacts = contacts;
+        this.inflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public int getCount() {
+        return filteredContacts.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @SuppressLint("InflateParams")
@@ -34,15 +52,14 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
 
         try {
             if (v == null) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = inflater.inflate(android.R.layout.simple_list_item_1, null);
+                v = this.inflater.inflate(android.R.layout.simple_list_item_1, null);
             }
 
-            Contact contact = contacts.get(position);
+            Contact contact = filteredContacts.get(position);
             TextView tt = (TextView) v.findViewById(android.R.id.text1);
 
             if (contact != null && tt != null) {
-                tt.setText(Html.fromHtml(contact.toString()));
+                tt.setText(Html.fromHtml(contact.toHTMLString()));
             }
         } catch (Exception e) {
             Logger.getAnonymousLogger().warning(e.getMessage());
@@ -84,8 +101,8 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
                 } else {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < contacts.size(); i++) {
-                        String data = contacts.get(i).toPlainString();
-                        if (data.toLowerCase().startsWith(constraint.toString())) {
+                        String data = contacts.get(i).toString();
+                        if (data.toLowerCase().contains(constraint.toString().toLowerCase())) {
                             FilteredArrList.add(new Contact(contacts.get(i)));
                         }
                     }

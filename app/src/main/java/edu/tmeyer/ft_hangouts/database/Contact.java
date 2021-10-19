@@ -91,10 +91,10 @@ public class Contact implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        return this.firstName + " " + "<b>" + this.lastName + "</b>";
+        return this.firstName + " " + this.lastName;
     }
 
-    public String toPlainString() {
-        return this.firstName + " " + this.lastName;
+    public String toHTMLString() {
+        return this.firstName + " <b>" + this.lastName + "</b>";
     }
 }

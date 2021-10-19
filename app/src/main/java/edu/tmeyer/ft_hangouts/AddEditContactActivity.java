@@ -132,18 +132,18 @@ public class AddEditContactActivity extends AppCompatActivity {
 
             if (mode == MainActivity.MODE_CREATE) {
                 Contact contact = new Contact(
-                        this.textFirstName.getText().toString(),
-                        this.textLastName.getText().toString(),
-                        this.textPhone.getText().toString(),
-                        this.textNote.getText().toString(),
+                        this.textFirstName.getText().toString().trim(),
+                        this.textLastName.getText().toString().trim(),
+                        this.textPhone.getText().toString().trim(),
+                        this.textNote.getText().toString().trim(),
                         new byte[0]
                 );
                 databaseHelper.addContact(contact);
             } else {
-                this.contact.setFirstName(this.textFirstName.getText().toString());
-                this.contact.setLastName(this.textLastName.getText().toString());
-                this.contact.setPhone(this.textPhone.getText().toString());
-                this.contact.setNote(this.textNote.getText().toString());
+                this.contact.setFirstName(this.textFirstName.getText().toString().trim());
+                this.contact.setLastName(this.textLastName.getText().toString().trim());
+                this.contact.setPhone(this.textPhone.getText().toString().trim());
+                this.contact.setNote(this.textNote.getText().toString().trim());
                 databaseHelper.updateContact(contact);
             }
             this.needRefresh = true;

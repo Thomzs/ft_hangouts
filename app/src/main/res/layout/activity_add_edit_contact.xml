@@ -39,6 +39,7 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="22dp"
+        android:background="@android:color/transparent"
         android:ems="10"
         android:hint="@string/first_name"
         android:importantForAutofill="no"
@@ -82,6 +83,7 @@
         android:layout_marginStart="22dp"
         android:layout_marginEnd="22dp"
         android:layout_marginBottom="48dp"
+        android:background="@android:color/transparent"
         android:ems="10"
         android:hint="@string/last_name"
         android:importantForAutofill="no"
@@ -112,6 +114,7 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="22dp"
         android:layout_marginBottom="48dp"
+        android:background="@android:color/transparent"
         android:ems="10"
         android:hint="@string/phone"
         android:importantForAutofill="no"
@@ -142,14 +145,15 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="22dp"
+        android:background="@android:color/transparent"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/note"
+        android:importantForAutofill="no"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/view4" />
 
     <Button
         android:id="@+id/button_delete"

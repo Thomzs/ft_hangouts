@@ -4,13 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    app:layout_constraintTop_toTopOf="parent"
     tools:context=".MainActivity">
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@drawable/shadow"
+        android:backgroundTint="@color/white"
+        android:elevation="2dp"
+        app:layout_constraintBottom_toTopOf="@id/contact_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="409dp"
         android:layout_height="56dp"
-        android:background="#00FFFFFF"
+        android:background="@color/white"
+        android:elevation="2dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,9 +37,11 @@
         android:id="@+id/language_button"
         android:layout_width="110dp"
         android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="2dp"
         android:gravity="center"
         android:text="@string/language"
-        android:textColor="#659DB3"
+        android:textColor="#78909C"
         android:textSize="16sp"
         android:textStyle="normal|bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,9 +51,11 @@
         android:id="@+id/new_button"
         android:layout_width="110dp"
         android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="2dp"
         android:gravity="center"
         android:text="@string/add_contact"
-        android:textColor="#659DB3"
+        android:textColor="#78909C"
         android:textSize="16sp"
         android:textStyle="normal|bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,20 +65,44 @@
         android:id="@+id/textView2"
         android:layout_width="189dp"
         android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="2dp"
         android:gravity="center"
         android:text="@string/app_name"
+        android:textColor="#78909C"
         android:textSize="20sp"
         android:textStyle="normal|bold"
         app:layout_constraintEnd_toStartOf="@id/new_button"
         app:layout_constraintStart_toEndOf="@id/language_button"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="2dp"
+        android:background="@color/white"
+        android:elevation="2dp"
+        android:iconifiedByDefault="false"
+        android:outlineProvider="background"
+        android:queryBackground="@android:color/transparent"
+        android:queryHint="@string/search"
+        app:layout_constraintBottom_toTopOf="@+id/contact_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+
+    </SearchView>
+
     <ListView
         android:id="@+id/contact_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#F6F6F6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

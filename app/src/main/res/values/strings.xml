@@ -11,4 +11,5 @@
     <string name="delete_warning">You are about to delete this contact. This action is irreversible. Do you wish to continue?</string>
     <string name="delete">Delete</string>
     <string name="search">Search</string>
+    <string name="image">Picture</string>
 </resources>

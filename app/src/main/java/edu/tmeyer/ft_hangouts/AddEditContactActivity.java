@@ -164,7 +164,7 @@ public class AddEditContactActivity extends AppCompatActivity {
 
         this.buttonOk.setClickable(isReady);
         if (isReady) {
-            this.buttonOk.setTextColor(Color.parseColor("#659DB3"));
+            this.buttonOk.setTextColor(Color.parseColor("#78929F"));
         } else {
             this.buttonOk.setTextColor(Color.parseColor("#808080"));
         }

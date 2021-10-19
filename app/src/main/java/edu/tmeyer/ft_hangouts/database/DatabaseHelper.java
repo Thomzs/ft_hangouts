@@ -114,7 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return contactList;
     }
 
-    public Contact getContact(int id) {
+    public Contact getContact(long id) {
         Contact contact = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(

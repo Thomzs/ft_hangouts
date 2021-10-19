@@ -37,12 +37,12 @@ public class ContactAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public Object getItem(int position) {
-        return position;
+        return filteredContacts.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return filteredContacts.get(position).getId();
     }
 
     @SuppressLint("InflateParams")

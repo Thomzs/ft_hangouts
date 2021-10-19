@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Contact implements Serializable {
 
-    private int     id;
+    private long id;
     private String  firstName;
     private String  lastName;
     private String  phone;
@@ -17,6 +17,7 @@ public class Contact implements Serializable {
         this.id = contact.getId();
         this.firstName = contact.getFirstName();
         this.lastName = contact.getLastName();
+        this.phone = contact.getPhone();
         this.note = contact.getNote();
         this.picture = contact.getPicture();
     }
@@ -40,11 +41,11 @@ public class Contact implements Serializable {
 
     public Contact() {}
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

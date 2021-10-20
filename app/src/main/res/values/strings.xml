@@ -14,4 +14,7 @@
     <string name="image">Picture</string>
     <string name="select_picture">Select a picture</string>
     <string name="delete_picture">Delete picture</string>
+    <string name="call">Call</string>
+    <string name="text">Send text</string>
+    <string name="incorrect_call">Could not call this number</string>
 </resources>

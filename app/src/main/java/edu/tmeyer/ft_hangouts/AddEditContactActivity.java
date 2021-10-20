@@ -26,10 +26,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,6 +57,8 @@ public class AddEditContactActivity extends AppCompatActivity {
     private TextView        buttonDelete;
     private ImageView       imageContact;
     private LinearLayout    linearLayout;
+    private FloatingActionButton callButton;
+    private FloatingActionButton textButton;
 
     private Contact         contact;
     private boolean         needRefresh;
@@ -200,6 +205,18 @@ public class AddEditContactActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             return false;
         });
+
+        this.callButton.setOnClickListener(view -> {
+            try {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse(this.textPhone.getText().toString()));
+                startActivity(callIntent);
+            } catch (Exception e) {
+                Toast toast = Toast.makeText(this, R.string.incorrect_call, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
+
 
         registerForContextMenu(this.imageContact);
     }

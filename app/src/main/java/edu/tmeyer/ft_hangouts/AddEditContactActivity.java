@@ -1,44 +1,66 @@
 package edu.tmeyer.ft_hangouts;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
+import edu.tmeyer.ft_hangouts.activity.CustomActivityResult;
 import edu.tmeyer.ft_hangouts.database.Contact;
 import edu.tmeyer.ft_hangouts.database.DatabaseHelper;
+import edu.tmeyer.ft_hangouts.image.ImageHelper;
 
 public class AddEditContactActivity extends AppCompatActivity {
 
-    private EditText    textFirstName;
-    private EditText    textLastName;
-    private EditText    textPhone;
-    private EditText    textNote;
-    private TextView    buttonCancel;
-    private TextView    buttonOk;
-    private TextView    buttonDelete;
-    private ImageView   imageContact;
+    private EditText        textFirstName;
+    private EditText        textLastName;
+    private EditText        textPhone;
+    private EditText        textNote;
+    private TextView        buttonCancel;
+    private TextView        buttonOk;
+    private TextView        buttonDelete;
+    private ImageView       imageContact;
+    private LinearLayout    linearLayout;
 
-    private Contact     contact;
-    private boolean     needRefresh;
-    private int         mode;
+    private Contact         contact;
+    private boolean         needRefresh;
+    private int             mode;
+
+    protected final CustomActivityResult<Intent, ActivityResult>
+                            activityLauncher = CustomActivityResult.registerActivityForResult(this);
 
 
     private class GenericTextWatcher implements TextWatcher {
@@ -56,6 +78,7 @@ public class AddEditContactActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +94,17 @@ public class AddEditContactActivity extends AppCompatActivity {
         this.textPhone.addTextChangedListener(new GenericTextWatcher());
         this.textNote = (EditText) this.findViewById(R.id.contact_note);
         this.textNote.addTextChangedListener(new GenericTextWatcher());
+        this.textNote.setOnTouchListener((view, event) -> {
+                if (view.getId() == R.id.contact_note) {
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction()&MotionEvent.ACTION_MASK){
+                        case MotionEvent.ACTION_UP:
+                            view.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            });
 
         this.buttonCancel = (TextView) this.findViewById(R.id.cancel_button);
         this.buttonDelete = (TextView) this.findViewById(R.id.button_delete);
@@ -90,11 +124,17 @@ public class AddEditContactActivity extends AppCompatActivity {
 
             byte[] picture = this.contact.getPicture();
             if (picture == null || picture.length == 0) {
-                this.imageContact.setImageResource(R.drawable.default_contact);
+                try {
+                    InputStream is = getAssets().open("default_contact.png");
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    this.imageContact.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 1000));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 Bitmap bmp = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+                this.imageContact.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bmp, 1000));
             }
-
 
             //Delete button is enabled only in edit mode, otherwise it is disabled
             this.buttonDelete.setOnClickListener(view -> {
@@ -154,6 +194,14 @@ public class AddEditContactActivity extends AppCompatActivity {
         });
         this.buttonOk.setClickable(mode == MainActivity.MODE_EDIT);
 
+        this.linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        this.linearLayout.setOnTouchListener((view, motionEvent) -> { //Hide keyboard on touch elsewhere
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            return false;
+        });
+
+        registerForContextMenu(this.imageContact);
     }
 
     public void enableOkIfReady() {
@@ -168,5 +216,76 @@ public class AddEditContactActivity extends AppCompatActivity {
         } else {
             this.buttonOk.setTextColor(Color.parseColor("#808080"));
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        byte[] picture = this.contact.getPicture();
+
+        menu.add(0, 0, 0, R.string.select_picture);
+        if (picture != null && picture.length > 0) {
+            menu.add(0, 1, 1, R.string.delete_picture);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 0: //delete picture
+                try {
+                    contact.setPicture(new byte[0]);
+                    InputStream is = getAssets().open("default_contact.png");
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    this.imageContact.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 1000));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 1: //Select a picture
+                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                getIntent.setType("image/*");
+
+                Intent pickIntent = new Intent(Intent.ACTION_PICK);
+                pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                openGalleryForResult(chooserIntent);
+                break;
+        }
+        return true;
+    }
+
+    private void openGalleryForResult(Intent chooserIntent) {
+
+        activityLauncher.launch(chooserIntent, result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent resultData = result.getData();
+
+                if (resultData != null) {
+                    Uri selectedImageUri = resultData.getData();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                    try {
+                        InputStream is = getContentResolver().openInputStream(selectedImageUri);
+                        byte[] buf = new byte[1024];
+                        int n;
+
+                        while (-1 != (n = is.read(buf)))
+                            baos.write(buf, 0, n);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    byte[] newPicture = baos.toByteArray();
+                    Bitmap bmp = BitmapFactory.decodeByteArray(newPicture, 0, newPicture.length);
+
+                    contact.setPicture(newPicture);
+                    this.imageContact.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bmp, 200));
+                }
+            }
+        });
     }
 }

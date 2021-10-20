@@ -70,6 +70,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#F6F6F6"
@@ -77,8 +78,8 @@
 
             <ImageView
                 android:id="@+id/contact_image"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="48dp"
                 android:contentDescription="@string/image"
@@ -153,6 +154,8 @@
                 android:paddingRight="24dp"
                 android:paddingBottom="12dp"
                 android:scrollbars="vertical"
+                android:focusable="true"
+                android:overScrollMode="ifContentScrolls"
                 android:autofillHints="" />
 
             <Button

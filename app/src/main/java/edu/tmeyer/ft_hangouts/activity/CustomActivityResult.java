@@ -10,6 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.FileNotFoundException;
+
 public class CustomActivityResult<Input, Result> {
     /**
      * Register activity result using a {@link ActivityResultContract} and an in-place activity result callback like

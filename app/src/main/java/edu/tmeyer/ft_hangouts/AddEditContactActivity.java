@@ -1,21 +1,19 @@
 package edu.tmeyer.ft_hangouts;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -24,7 +22,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,16 +29,18 @@ import androidx.activity.result.ActivityResult;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+import edu.tmeyer.ft_hangouts.activity.BackgroundTime;
 import edu.tmeyer.ft_hangouts.activity.CustomActivityResult;
+import edu.tmeyer.ft_hangouts.activity.PermissionsUtils;
 import edu.tmeyer.ft_hangouts.database.Contact;
 import edu.tmeyer.ft_hangouts.database.DatabaseHelper;
 import edu.tmeyer.ft_hangouts.image.ImageHelper;
@@ -66,7 +65,15 @@ public class AddEditContactActivity extends AppCompatActivity {
 
     protected final CustomActivityResult<Intent, ActivityResult>
                             activityLauncher = CustomActivityResult.registerActivityForResult(this);
+    private final DatabaseHelper  databaseHelper = new DatabaseHelper(this);
 
+
+    private Context         context = this;
+    private PictureMode     pictureStatus = PictureMode.DEFAULT;
+
+    private enum PictureMode {
+        CHANGED, DELETED, DEFAULT;
+    }
 
     private class GenericTextWatcher implements TextWatcher {
 
@@ -121,7 +128,8 @@ public class AddEditContactActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         this.mode = (int) intent.getSerializableExtra("mode");
         if (mode == MainActivity.MODE_EDIT) {
-            this.contact = (Contact) intent.getSerializableExtra("contact");
+            long id = (long) intent.getSerializableExtra("contact");
+            this.contact = databaseHelper.getContact(id);
             this.textFirstName.setText(contact.getFirstName());
             this.textLastName.setText(contact.getLastName());
             this.textPhone.setText(contact.getPhone());
@@ -149,7 +157,6 @@ public class AddEditContactActivity extends AppCompatActivity {
                         .setPositiveButton(
                                 R.string.delete,
                                 (dialogInterface, i) -> {
-                                    DatabaseHelper databaseHelper = new DatabaseHelper(this);
                                     databaseHelper.deleteContact(contact);
                                     this.needRefresh = true;
                                     Intent returnIntent = new Intent();
@@ -164,6 +171,13 @@ public class AddEditContactActivity extends AppCompatActivity {
             this.buttonOk.setClickable(false);
             this.mode = MainActivity.MODE_CREATE;
             this.buttonDelete.setVisibility(View.INVISIBLE);
+            try {
+                InputStream is = getAssets().open("default_contact.png");
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                this.imageContact.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 1000));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         this.buttonCancel.setOnClickListener(view -> {
@@ -181,7 +195,7 @@ public class AddEditContactActivity extends AppCompatActivity {
                         this.textLastName.getText().toString().trim(),
                         this.textPhone.getText().toString().trim(),
                         this.textNote.getText().toString().trim(),
-                        new byte[0]
+                        this.pictureStatus == PictureMode.CHANGED ? getPicture() : new byte[0]
                 );
                 databaseHelper.addContact(contact);
             } else {
@@ -189,6 +203,11 @@ public class AddEditContactActivity extends AppCompatActivity {
                 this.contact.setLastName(this.textLastName.getText().toString().trim());
                 this.contact.setPhone(this.textPhone.getText().toString().trim());
                 this.contact.setNote(this.textNote.getText().toString().trim());
+                if (this.pictureStatus == PictureMode.CHANGED) {
+                    this.contact.setPicture(getPicture());
+                } else if (this.pictureStatus == PictureMode.DELETED) {
+                    this.contact.setPicture(new byte[0]);
+                }
                 databaseHelper.updateContact(contact);
             }
             this.needRefresh = true;
@@ -206,6 +225,7 @@ public class AddEditContactActivity extends AppCompatActivity {
             return false;
         });
 
+        this.callButton = (FloatingActionButton) findViewById(R.id.call_button);
         this.callButton.setOnClickListener(view -> {
             try {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -217,6 +237,46 @@ public class AddEditContactActivity extends AppCompatActivity {
             }
         });
 
+        this.textButton = (FloatingActionButton) findViewById(R.id.message_button);
+        this.textButton.setOnClickListener(view -> {
+            MaterialAlertDialogBuilder messageDialog = new MaterialAlertDialogBuilder(context);
+            View dialogView = getLayoutInflater().inflate(R.layout.message_dialog, null);
+            EditText message = (EditText) dialogView.findViewById(R.id.dialog_message);
+
+            message.addTextChangedListener(new GenericTextWatcher());
+            message.setOnTouchListener((_view, event) -> {
+                if (_view.getId() == R.id.dialog_message) {
+                    _view.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction()&MotionEvent.ACTION_MASK){
+                        case MotionEvent.ACTION_UP:
+                            _view.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            });
+            messageDialog
+                    .setTitle(R.string.send_a_message)
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.send, (dialog, which) -> {
+                        String toSend = message.getText().toString();
+
+                        if (!PermissionsUtils.hasPermission(AddEditContactActivity.this, Manifest.permission.SEND_SMS)) {
+                            PermissionsUtils.requestPermissions(AddEditContactActivity.this, new String[]{Manifest.permission.SEND_SMS}, 0);
+                            if (!PermissionsUtils.hasPermission(AddEditContactActivity.this, Manifest.permission.SEND_SMS)) {
+                                Snackbar.make(findViewById(R.id.layout), R.string.need_sms_permission, Snackbar.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                        if (SMSHandler.sendSMS(AddEditContactActivity.this, textPhone.getText().toString(), toSend)) {
+                            Snackbar.make(findViewById(R.id.layout), R.string.success_text, Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            Snackbar.make(findViewById(R.id.layout), R.string.fail_text, Snackbar.LENGTH_LONG).show();
+                        }
+                    })
+                    .show();
+        });
 
         registerForContextMenu(this.imageContact);
     }
@@ -238,13 +298,18 @@ public class AddEditContactActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        byte[] picture;
 
-        byte[] picture = this.contact.getPicture();
-
-        menu.add(0, 0, 0, R.string.select_picture);
-        if (picture != null && picture.length > 0) {
-            menu.add(0, 1, 1, R.string.delete_picture);
+        if (this.mode == MainActivity.MODE_EDIT) {
+            picture = this.contact.getPicture();
+        } else {
+            picture = null;
         }
+
+        if (picture != null && picture.length > 0) {
+            menu.add(0, 0, 1, R.string.delete_picture);
+        }
+        menu.add(0, 1, 0, R.string.select_picture);
     }
 
     @Override
@@ -253,10 +318,10 @@ public class AddEditContactActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case 0: //delete picture
                 try {
-                    contact.setPicture(new byte[0]);
                     InputStream is = getAssets().open("default_contact.png");
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
                     this.imageContact.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap, 1000));
+                    this.pictureStatus = PictureMode.DELETED;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -271,6 +336,7 @@ public class AddEditContactActivity extends AppCompatActivity {
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
                 openGalleryForResult(chooserIntent);
+                this.pictureStatus = PictureMode.CHANGED;
                 break;
         }
         return true;
@@ -299,10 +365,32 @@ public class AddEditContactActivity extends AppCompatActivity {
                     byte[] newPicture = baos.toByteArray();
                     Bitmap bmp = BitmapFactory.decodeByteArray(newPicture, 0, newPicture.length);
 
-                    contact.setPicture(newPicture);
                     this.imageContact.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bmp, 200));
                 }
             }
         });
+    }
+
+    private byte[] getPicture() {
+        try {
+            Bitmap bitmap = ((BitmapDrawable) this.imageContact.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            return baos.toByteArray();
+        } catch (Exception e) {
+            return new byte[0];
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundTime.getInstance().onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BackgroundTime.getInstance().onResume(this);
     }
 }

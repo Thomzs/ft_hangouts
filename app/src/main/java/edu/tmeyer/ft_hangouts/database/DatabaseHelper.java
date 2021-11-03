@@ -163,8 +163,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public void test() {
-        Contact contact = new Contact("Jean", "Eude", "0102030405", "gentil", new byte[0]);
-        this.addContact(contact);
+    public void executeQuery(String query) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.close();
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

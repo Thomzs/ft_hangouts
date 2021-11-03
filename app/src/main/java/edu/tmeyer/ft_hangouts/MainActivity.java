@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import edu.tmeyer.ft_hangouts.activity.BackgroundTime;
 import edu.tmeyer.ft_hangouts.activity.CustomActivityResult;
 import edu.tmeyer.ft_hangouts.database.Contact;
 import edu.tmeyer.ft_hangouts.database.DatabaseHelper;
@@ -56,9 +57,8 @@ public class MainActivity extends AppCompatActivity {
         this.listView.setAdapter(this.listViewAdapter);
         this.listView.setOnItemClickListener((adapterView, view, i, l) -> { //Click on a contact to edit it
             Contact contact = (Contact) listView.getItemAtPosition(i);
-            contact = databaseHelper.getContact(contact.getId()); //Retrieve all info about the contact wanted
             Intent intent = new Intent(this, AddEditContactActivity.class);
-            intent.putExtra("contact", contact);
+            intent.putExtra("contact", contact.getId());
             intent.putExtra("mode", MODE_EDIT);
             openContactActivityForResult(intent);
         });
@@ -109,5 +109,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundTime.getInstance().onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BackgroundTime.getInstance().onResume(this);
     }
 }

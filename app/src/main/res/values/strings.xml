@@ -17,4 +17,11 @@
     <string name="call">Call</string>
     <string name="text">Send text</string>
     <string name="incorrect_call">Could not call this number</string>
+    <string name="send">Send</string>
+    <string name="fail_text">Could not send this message. Please try again or verify the phone number</string>
+    <string name="success_text">Message was successfully send</string>
+    <string name="send_a_message">Send a message</string>
+    <string name="message">Message</string>
+    <string name="need_sms_permission">Message could not be sent. You need to grant ft_hangouts the permission to send SMS</string>
+    <string name="background_time">Time when put in background: </string>
 </resources>

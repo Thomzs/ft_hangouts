@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ft_hangouts</string>
+    <string name="first_name">Prénom</string>
+    <string name="last_name">Nom</string>
+    <string name="phone">Téléphone</string>
+    <string name="note">Notes</string>
+    <string name="contact_delete">Supprimer le contact</string>
+    <string name="cancel">Annuler</string>
+    <string name="add_contact">Nouveau</string>
+    <string name="delete_warning">Vous êtes sur le point de supprimer ce contact. Cette action est irreversible. Voulez-vous continuer ?</string>
+    <string name="delete">Supprimer</string>
+    <string name="search">Rechercher</string>
+    <string name="image">Photo</string>
+    <string name="select_picture">Choisir une photo</string>
+    <string name="delete_picture">Supprimer la photo</string>
+    <string name="call">Appeler</string>
+    <string name="text">Envoyer un message</string>
+    <string name="incorrect_call">Echec de l\'appel</string>
+    <string name="send">Envoyer</string>
+    <string name="fail_text">Echec de l\'envoi du message. Veuillez réessayer ou vérifier le numéro</string>
+    <string name="success_text">Message envoyé</string>
+    <string name="send_a_message">Envoyer un message</string>
+    <string name="message">Message</string>
+    <string name="need_sms_permission">Le message n\'a pas pu être envoyé. Vous devez accorder la permission à Ft_Hangouts d\'envoyer des messages pour utiliser cette fonctionnalité</string>
+    <string name="background_time">Heure de la mise en arrière-plan : </string>
+    <string name="settings">Réglages</string>
+</resources>

@@ -35,31 +35,37 @@
 
     <TextView
         android:id="@+id/ok_button"
-        android:layout_width="110dp"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/white"
         android:elevation="2dp"
-        android:gravity="center"
+        android:gravity="center|right"
         android:text="@android:string/ok"
         android:textColor="#808080"
         android:textSize="16sp"
         android:textStyle="normal|bold"
+        android:paddingRight="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textView"
+        tools:ignore="RtlHardcoded,RtlSymmetry" />
 
     <TextView
         android:id="@+id/cancel_button"
-        android:layout_width="110dp"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/white"
         android:elevation="2dp"
-        android:gravity="center"
+        android:gravity="center|left"
         android:text="@string/cancel"
         android:textColor="#78929F"
         android:textSize="16sp"
         android:textStyle="normal|bold"
+        android:paddingLeft="24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textView"
+        tools:ignore="RtlHardcoded,RtlSymmetry" />
 
     <ScrollView
         android:layout_width="0dp"

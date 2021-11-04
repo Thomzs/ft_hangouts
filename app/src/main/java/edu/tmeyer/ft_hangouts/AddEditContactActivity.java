@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-import edu.tmeyer.ft_hangouts.activity.BackgroundTime;
 import edu.tmeyer.ft_hangouts.activity.CustomActivityResult;
 import edu.tmeyer.ft_hangouts.activity.PermissionsUtils;
 import edu.tmeyer.ft_hangouts.database.Contact;
@@ -380,17 +379,5 @@ public class AddEditContactActivity extends AppCompatActivity {
         } catch (Exception e) {
             return new byte[0];
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        BackgroundTime.getInstance().onPause(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        BackgroundTime.getInstance().onResume(this);
     }
 }

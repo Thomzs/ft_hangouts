@@ -9,7 +9,16 @@ import androidx.annotation.Nullable;
 
 public class BackgroundObserver extends Application implements Application.ActivityLifecycleCallbacks {
 
-    private int numberOfActivities = 0;
+    private int         numberOfActivities = 0;
+    private Activity    currentActivity;
+
+    public Activity getCurrentActivity() {
+        return currentActivity;
+    }
+
+    public void setCurrentActivity(Activity currentActivity) {
+        this.currentActivity = currentActivity;
+    }
 
     @Override
     public void onCreate() {
@@ -19,7 +28,7 @@ public class BackgroundObserver extends Application implements Application.Activ
 
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-
+        setCurrentActivity(activity);
     }
 
     @Override
@@ -32,12 +41,12 @@ public class BackgroundObserver extends Application implements Application.Activ
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
-
+        setCurrentActivity(activity);
     }
 
     @Override
     public void onActivityPaused(@NonNull Activity activity) {
-
+        clearReferences(activity);
     }
 
     @Override
@@ -55,6 +64,12 @@ public class BackgroundObserver extends Application implements Application.Activ
 
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
+        clearReferences(activity);
+    }
 
+    private void clearReferences(Activity activity) {
+        if (this.currentActivity.equals(activity)) {
+            setCurrentActivity(null);
+        }
     }
 }

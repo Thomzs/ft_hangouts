@@ -41,6 +41,10 @@ public class Contact implements Serializable {
 
     public Contact() {}
 
+    public Contact(String sender) {
+        this.lastName = sender;
+    }
+
     public long getId() {
         return id;
     }
@@ -92,10 +96,26 @@ public class Contact implements Serializable {
     @NonNull
     @Override
     public String toString() {
-        return this.firstName + " " + this.lastName;
+        StringBuilder sb = new StringBuilder();
+
+        if (this.firstName != null) {
+            sb.append(this.firstName);
+        }
+        if (this.lastName != null) {
+            sb.append(" ").append(this.lastName);
+        }
+        return sb.toString();
     }
 
     public String toHTMLString() {
-        return this.firstName + " <b>" + this.lastName + "</b>";
+        StringBuilder sb = new StringBuilder();
+
+        if (this.firstName != null) {
+            sb.append(this.firstName);
+        }
+        if (this.lastName != null) {
+            sb.append(" <b>").append(this.lastName).append("</b>");
+        }
+        return sb.toString();
     }
 }

@@ -237,45 +237,7 @@ public class AddEditContactActivity extends AppCompatActivity {
         });
 
         this.textButton = (FloatingActionButton) findViewById(R.id.message_button);
-        this.textButton.setOnClickListener(view -> {
-            MaterialAlertDialogBuilder messageDialog = new MaterialAlertDialogBuilder(context);
-            View dialogView = getLayoutInflater().inflate(R.layout.message_dialog, null);
-            EditText message = (EditText) dialogView.findViewById(R.id.dialog_message);
-
-            message.addTextChangedListener(new GenericTextWatcher());
-            message.setOnTouchListener((_view, event) -> {
-                if (_view.getId() == R.id.dialog_message) {
-                    _view.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction()&MotionEvent.ACTION_MASK){
-                        case MotionEvent.ACTION_UP:
-                            _view.getParent().requestDisallowInterceptTouchEvent(false);
-                            break;
-                    }
-                }
-                return false;
-            });
-            messageDialog
-                    .setTitle(R.string.send_a_message)
-                    .setView(dialogView)
-                    .setCancelable(true)
-                    .setPositiveButton(R.string.send, (dialog, which) -> {
-                        String toSend = message.getText().toString();
-
-                        if (!PermissionsUtils.hasPermission(AddEditContactActivity.this, Manifest.permission.SEND_SMS)) {
-                            PermissionsUtils.requestPermissions(AddEditContactActivity.this, new String[]{Manifest.permission.SEND_SMS}, 0);
-                            if (!PermissionsUtils.hasPermission(AddEditContactActivity.this, Manifest.permission.SEND_SMS)) {
-                                Snackbar.make(findViewById(R.id.layout), R.string.need_sms_permission, Snackbar.LENGTH_LONG).show();
-                                return;
-                            }
-                        }
-                        if (SMSHandler.sendSMS(AddEditContactActivity.this, textPhone.getText().toString(), toSend)) {
-                            Snackbar.make(findViewById(R.id.layout), R.string.success_text, Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            Snackbar.make(findViewById(R.id.layout), R.string.fail_text, Snackbar.LENGTH_LONG).show();
-                        }
-                    })
-                    .show();
-        });
+        this.textButton.setOnClickListener(new SMSDialog(this, textPhone.getText().toString()));
 
         registerForContextMenu(this.imageContact);
     }

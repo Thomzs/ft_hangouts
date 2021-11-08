@@ -173,4 +173,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
     }
+
+    public List<String> getAllNumbers() {
+        List<String> numbers = new ArrayList<>();
+
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.rawQuery("SELECT " + COLUMN_CONTACT_PHONE + " FROM " + TABLE_NAME, null);
+
+            while (cursor.moveToNext()) {
+                numbers.add(cursor.getString(0));
+            }
+            cursor.close();
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return numbers;
+    }
+
+    public Contact getContact(String number) {
+        Contact contact = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME,
+                new String[]{
+                        COLUMN_CONTACT_ID,
+                        COLUMN_CONTACT_FIRST_NAME,
+                        COLUMN_CONTACT_LAST_NAME,
+                        COLUMN_CONTACT_PHONE,
+                        COLUMN_CONTACT_PICTURE,
+                        COLUMN_CONTACT_NOTE
+                },
+                COLUMN_CONTACT_PHONE + "= ?",
+                new String[]{number},
+                null,
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            contact = new Contact();
+            contact.setId(cursor.getInt(0));
+            contact.setFirstName(cursor.getString(1));
+            contact.setLastName(cursor.getString(2));
+            contact.setPhone(cursor.getString(3));
+            contact.setPicture(cursor.getBlob(4));
+            contact.setNote(cursor.getString(5));
+            cursor.close();
+        }
+        db.close();
+        //Return null if no contact was found
+        return contact;
+    }
 }

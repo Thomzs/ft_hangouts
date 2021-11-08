@@ -3,6 +3,7 @@ package edu.tmeyer.ft_hangouts;
 import androidx.activity.result.ActivityResult;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -14,12 +15,15 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 import edu.tmeyer.ft_hangouts.activity.CustomActivityResult;
+import edu.tmeyer.ft_hangouts.activity.PermissionsUtils;
 import edu.tmeyer.ft_hangouts.database.Contact;
 import edu.tmeyer.ft_hangouts.database.DatabaseHelper;
 
@@ -87,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("mode", MODE_CREATE);
             openContactActivityForResult(intent);
         });
+
+        askForReceiveSMS();
     }
 
     private void openContactActivityForResult(Intent intent) {
@@ -108,5 +114,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void askForReceiveSMS() {
+        if (!PermissionsUtils.hasPermission(this, Manifest.permission.RECEIVE_SMS)) {
+            PermissionsUtils.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS}, 0);
+            if (!PermissionsUtils.hasPermission(this, Manifest.permission.RECEIVE_SMS)) {
+                Snackbar.make(findViewById(R.id.layout), R.string.need_receive_sms_permission, Snackbar.LENGTH_LONG).show();
+            } else {
+                
+            }
+        }
     }
 }

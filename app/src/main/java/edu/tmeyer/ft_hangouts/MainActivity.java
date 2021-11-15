@@ -2,6 +2,7 @@ package edu.tmeyer.ft_hangouts;
 
 import androidx.activity.result.ActivityResult;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<Contact>contactList = new ArrayList<>();
     private ContactAdapter          listViewAdapter;
     private ListView                listView;
+    private SwipeRefreshLayout      refreshLayout;
 
     protected final CustomActivityResult<Intent, ActivityResult>
                                     activityLauncher = CustomActivityResult.registerActivityForResult(this);
@@ -85,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        this.refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        this.refreshLayout.setOnRefreshListener(() -> {
+            doUpdate();
+
+        });
+
         TextView newButton = (TextView) findViewById(R.id.new_button);
         newButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, AddEditContactActivity.class);
@@ -97,22 +105,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void openContactActivityForResult(Intent intent) {
         activityLauncher.launch(intent, result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                Intent data = result.getData();
-                boolean needRefresh = data.getBooleanExtra("needRefresh", true);
+            try {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    boolean needRefresh = data.getBooleanExtra("needRefresh", true);
 
-                if (needRefresh) {
-                    DatabaseHelper databaseHelper = new DatabaseHelper(this);
-                    List<Contact> list = databaseHelper.getAllContacts();
-
-                    this.contactList.clear();
-                    this.contactList.addAll(list);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        this.contactList.sort(Comparator.comparing(Contact::getLastName));
+                    if (needRefresh) {
+                        needRefresh();
                     }
-                    this.listViewAdapter.notifyDataSetChanged();
                 }
-            }
+            } catch (NullPointerException ignored) {}
         });
     }
 
@@ -121,9 +123,28 @@ public class MainActivity extends AppCompatActivity {
             PermissionsUtils.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS}, 0);
             if (!PermissionsUtils.hasPermission(this, Manifest.permission.RECEIVE_SMS)) {
                 Snackbar.make(findViewById(R.id.layout), R.string.need_receive_sms_permission, Snackbar.LENGTH_LONG).show();
-            } else {
-                
             }
         }
+    }
+
+    private void needRefresh() {
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        List<Contact> list = databaseHelper.getAllContacts();
+
+        this.contactList.clear();
+        this.contactList.addAll(list);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this.contactList.sort(Comparator.comparing(Contact::getLastName));
+        }
+        this.listViewAdapter.notifyDataSetChanged();
+    }
+
+    private void doUpdate() {
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+
+        if (databaseHelper.getCount() != this.contactList.size()) {
+            needRefresh();
+        }
+        this.refreshLayout.setRefreshing(false);
     }
 }

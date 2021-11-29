@@ -34,10 +34,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/language_button"
+        android:id="@+id/settings_button"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@color/white"
         android:elevation="2dp"
         android:gravity="center|left"
         android:text="@string/settings"
@@ -54,7 +53,6 @@
         android:id="@+id/new_button"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@color/white"
         android:elevation="2dp"
         android:gravity="center|right"
         android:text="@string/add_contact"
@@ -71,7 +69,6 @@
         android:id="@+id/textView2"
         android:layout_width="189dp"
         android:layout_height="56dp"
-        android:background="@color/white"
         android:elevation="2dp"
         android:gravity="center"
         android:text="@string/app_name"
@@ -79,7 +76,7 @@
         android:textSize="20sp"
         android:textStyle="normal|bold"
         app:layout_constraintEnd_toStartOf="@id/new_button"
-        app:layout_constraintStart_toEndOf="@id/language_button"
+        app:layout_constraintStart_toEndOf="@id/settings_button"
         app:layout_constraintTop_toTopOf="parent" />
 
     <SearchView

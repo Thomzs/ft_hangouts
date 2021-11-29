@@ -28,4 +28,11 @@
     <string name="need_receive_sms_permission" >Cette permission est nécessaire pour lire les SMS dans l\'app</string>
     <string name="incoming_message">"Nouveau message entrant de "</string>
     <string name="reply">Répondre</string>
+    <string name="change_locale">Changer la langue</string>
+    <string name="change_color">Changet la couleur du header</string>
+    <string name="save">Sauvegarder</string>
+
+    <string name="white">Blanc</string>
+    <string name="red">Rouge</string>
+    <string name="blue">Bleu</string>
 </resources>

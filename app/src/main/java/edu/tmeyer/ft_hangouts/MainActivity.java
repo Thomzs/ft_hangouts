@@ -2,6 +2,8 @@ package edu.tmeyer.ft_hangouts;
 
 import androidx.activity.result.ActivityResult;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
@@ -9,14 +11,21 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -40,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private ListView                listView;
     private SwipeRefreshLayout      refreshLayout;
 
+    private String                  color;
+
+    protected SharedPreferences     sharedPref;
+
     protected final CustomActivityResult<Intent, ActivityResult>
                                     activityLauncher = CustomActivityResult.registerActivityForResult(this);
 
@@ -49,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main);
+
+        this.sharedPref = this.getPreferences(MODE_PRIVATE);
+        this.color = this.sharedPref.getString("headerColor", getResources().getString(R.string.white));
+        updateColor(this.color); //headerColor
 
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
         List<Contact> contacts = databaseHelper.getAllContacts();
@@ -88,10 +105,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         this.refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        this.refreshLayout.setOnRefreshListener(() -> {
-            doUpdate();
-
-        });
+        this.refreshLayout.setOnRefreshListener(this::doUpdate);
 
         TextView newButton = (TextView) findViewById(R.id.new_button);
         newButton.setOnClickListener(view -> {
@@ -100,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
             openContactActivityForResult(intent);
         });
 
+        TextView settingsButton = (TextView) findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(view -> showSettingsMenu());
         askForReceiveSMS();
     }
 
@@ -146,5 +162,57 @@ public class MainActivity extends AppCompatActivity {
             needRefresh();
         }
         this.refreshLayout.setRefreshing(false);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private void showSettingsMenu() {
+        MaterialAlertDialogBuilder dialogMenu = new MaterialAlertDialogBuilder(this);
+        View view = this.getLayoutInflater().inflate(R.layout.dialog_menu, null);
+        TextInputLayout tmp = view.findViewById(R.id.menu_locale);
+        AutoCompleteTextView colorView = (AutoCompleteTextView) tmp.getEditText();
+
+        assert colorView != null;
+        colorView.setText(this.color);
+        colorView.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, getResources().getStringArray(R.array.colors)));
+        dialogMenu
+                .setTitle(R.string.settings)
+                .setCancelable(true)
+                .setView(view)
+                .setPositiveButton(R.string.save, (dialog, which) -> {
+                    String newColor = colorView.getText().toString();
+                    SharedPreferences.Editor editor = this.sharedPref.edit();
+                    int colorCode = updateColor(newColor);
+                    this.color = newColor;
+
+                    ((BackgroundObserver) getApplicationContext()).setHeaderColor(colorCode);
+                    editor.putString("headerColor", newColor);
+                    editor.apply();
+                })
+                .show();
+    }
+
+    private int updateColor(String newColor) {
+        int color = ContextCompat.getColor(this, android.R.color.white);
+
+        if (newColor.equalsIgnoreCase(getResources().getString(R.string.white))) {
+            color = ContextCompat.getColor(this, android.R.color.white);
+        } else if (newColor.equalsIgnoreCase(getResources().getString(R.string.red))) {
+            color = ContextCompat.getColor(this, android.R.color.holo_red_light);
+        } else if (newColor.equalsIgnoreCase(getResources().getString(R.string.blue))) {
+            color = ContextCompat.getColor(this, android.R.color.holo_blue_bright);
+        }
+        changeHeaderColor(color);
+        return color;
+    }
+
+    private void changeHeaderColor(Integer color) {
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        SearchView searchView = findViewById(R.id.searchView);
+
+        if (color == null) {
+            color = ContextCompat.getColor(this, android.R.color.white);
+        }
+        toolbar.setBackground(new ColorDrawable(color));
+        searchView.setBackgroundColor(color);
     }
 }

@@ -15,6 +15,10 @@
         <entry key="app/src/main/res/drawable/ic_baseline_call_24.xml" value="0.246875" />
         <entry key="app/src/main/res/drawable/ic_baseline_chat_24.xml" value="0.246875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/dialog_menu.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/list_item.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/message_dialog.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/menu/overflow_menu.xml" value="0.4036458333333333" />
       </map>
     </option>
   </component>

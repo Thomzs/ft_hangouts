@@ -24,7 +24,20 @@
     <string name="message">Message</string>
     <string name="need_sms_permission">Message could not be sent. You need to grant Ft_Hangouts the permission to send SMS to use this functionality</string>
     <string name="background_time">Time when put in background: </string>
-    <string name="need_receive_sms_permission" >This permission is needed to read incomig SMS in the app</string>
+    <string name="need_receive_sms_permission" >This permission is needed to read incoming SMS in the app</string>
     <string name="incoming_message">"New incoming message from "</string>
     <string name="reply">Reply</string>
+    <string name="change_locale">Set language</string>
+    <string name="change_color">Set header color</string>
+    <string name="save">Save</string>
+    <string name="white">White</string>
+    <string name="red">Red</string>
+    <string name="blue">Blue</string>
+    
+    <string-array name="colors">
+        <item>@string/white</item>
+        <item>@string/red</item>
+        <item>@string/blue</item>
+    </string-array>
+
 </resources>

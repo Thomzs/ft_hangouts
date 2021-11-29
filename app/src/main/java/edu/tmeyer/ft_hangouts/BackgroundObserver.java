@@ -11,6 +11,7 @@ public class BackgroundObserver extends Application implements Application.Activ
 
     private int         numberOfActivities = 0;
     private Activity    currentActivity;
+    private int         headerColor;
 
     public Activity getCurrentActivity() {
         return currentActivity;
@@ -71,5 +72,13 @@ public class BackgroundObserver extends Application implements Application.Activ
         if (this.currentActivity.equals(activity)) {
             setCurrentActivity(null);
         }
+    }
+
+    public void setHeaderColor(int headerColor) {
+        this.headerColor = headerColor;
+    }
+
+    public int getHeaderColor() {
+        return this.headerColor;
     }
 }

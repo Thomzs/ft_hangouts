@@ -38,6 +38,7 @@ public class SMSDialog implements View.OnClickListener, DialogInterface.OnClickL
         MaterialAlertDialogBuilder messageDialog = new MaterialAlertDialogBuilder(this.activity);
         View dialogView = this.activity.getLayoutInflater().inflate(R.layout.message_dialog, null);
         EditText message = (EditText) dialogView.findViewById(R.id.dialog_message);
+
         message.setOnTouchListener((_view, _event) -> {
             if (_view.getId() == R.id.dialog_message) {
                 _view.getParent().requestDisallowInterceptTouchEvent(true);

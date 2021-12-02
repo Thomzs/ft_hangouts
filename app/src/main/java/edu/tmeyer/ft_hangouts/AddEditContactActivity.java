@@ -28,10 +28,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,7 +38,6 @@ import java.io.InputStream;
 import java.util.Objects;
 
 import edu.tmeyer.ft_hangouts.activity.CustomActivityResult;
-import edu.tmeyer.ft_hangouts.activity.PermissionsUtils;
 import edu.tmeyer.ft_hangouts.database.Contact;
 import edu.tmeyer.ft_hangouts.database.DatabaseHelper;
 import edu.tmeyer.ft_hangouts.image.ImageHelper;
@@ -95,6 +93,8 @@ public class AddEditContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_add_edit_contact);
+
+        setHeaderColor();
 
         //Declaration of fields and TextChangedEvent to activate or deactivate the OK button
         this.textFirstName = (EditText) this.findViewById(R.id.contact_first_name);
@@ -240,6 +240,13 @@ public class AddEditContactActivity extends AppCompatActivity {
         this.textButton.setOnClickListener(new SMSDialog(this, textPhone.getText().toString()));
 
         registerForContextMenu(this.imageContact);
+    }
+
+    public void setHeaderColor() {
+        int color = ((BackgroundObserver) getApplicationContext()).getHeaderColor();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setBackground(new ColorDrawable(color));
     }
 
     public void enableOkIfReady() {

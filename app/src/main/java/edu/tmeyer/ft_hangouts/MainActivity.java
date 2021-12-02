@@ -181,17 +181,16 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.save, (dialog, which) -> {
                     String newColor = colorView.getText().toString();
                     SharedPreferences.Editor editor = this.sharedPref.edit();
-                    int colorCode = updateColor(newColor);
                     this.color = newColor;
 
-                    ((BackgroundObserver) getApplicationContext()).setHeaderColor(colorCode);
+                    updateColor(newColor);
                     editor.putString("headerColor", newColor);
                     editor.apply();
                 })
                 .show();
     }
 
-    private int updateColor(String newColor) {
+    private void updateColor(String newColor) {
         int color = ContextCompat.getColor(this, android.R.color.white);
 
         if (newColor.equalsIgnoreCase(getResources().getString(R.string.white))) {
@@ -202,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
             color = ContextCompat.getColor(this, android.R.color.holo_blue_bright);
         }
         changeHeaderColor(color);
-        return color;
+        ((BackgroundObserver) getApplicationContext()).setHeaderColor(color);
     }
 
     private void changeHeaderColor(Integer color) {

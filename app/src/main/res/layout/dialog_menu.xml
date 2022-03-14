@@ -9,14 +9,14 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/change_locale"
+        android:hint="@string/change_color"
         tools:ignore="MissingConstraints">
 
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
